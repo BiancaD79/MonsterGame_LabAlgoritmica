@@ -11,6 +11,7 @@ namespace Monster_Game
     {
         public static int[,] gMatrix;
         static List<Monster> monsters = new List<Monster>();
+        static Player player;
         public static void Load(string fileName)
         {
             TextReader load = new StreamReader(fileName);
@@ -28,10 +29,12 @@ namespace Monster_Game
                 for (int j = 0; j < local.Length; j++)
                 {
                     gMatrix[i,j] = int.Parse(local[j]);
-                    if(gMatrix[i,j] == 5 || gMatrix[i, j] == 6 || gMatrix[i, j] == 7)
+                    if (gMatrix[i, j] == 5 || gMatrix[i, j] == 6 || gMatrix[i, j] == 7)
                     {
-                        monsters.Add(new Monster(i, j, gMatrix[i, j]));
+                        monsters.Add(new Monster(i, j, gMatrix[i, j], "../../../Resources/monster.png"));
                     }
+                    else
+                        if (gMatrix[i, j] == 2) player = new Player(i,j,"../../../Resources/player.png");
                 }
             }
             
@@ -49,8 +52,31 @@ namespace Monster_Game
         {
             foreach(Monster m in monsters)
                 m.Tick();
+            player.Tick();
         }
 
+        public static void MovePlayer(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Down) player.direction = 2;
+            else
+                if (e.KeyCode == Keys.Up)
+                player.direction = 1;
+            else
+                if (e.KeyCode == Keys.Right) player.direction = 3;
+            else
+                if (e.KeyCode == Keys.Left) player.direction = 4;
+
+        }
+
+        public static void StopPlayer(KeyEventArgs e)
+        {
+            player.direction = 0;
+        }
+
+        public static void Stop()
+        {
+            monsters.Clear();
+        }
         public static void Draw(myGraphics handler)
         {
             for (int i = 0; i < gMatrix.GetLength(0); i++)
@@ -64,7 +90,7 @@ namespace Monster_Game
                             handler.grp.DrawRectangle(Pens.Black, j * dw, i * dh,dw,dh);
                             break;
                         case 2:
-                            //start
+                            player.DrawImage(handler);
                             break;
                         case 3: // final
                             break;
@@ -72,22 +98,15 @@ namespace Monster_Game
                             handler.grp.FillEllipse(Brushes.BlueViolet, j * dw, i * dh, dw, dh);
                             handler.grp.DrawEllipse(Pens.Black, j * dw, i * dh, dw, dh);
                             break;
-                        case 5: // orizontal
-                           
-                        case 6: // vertical
-                           
-                        case 7: // toate dir
-                            //handler.grp.FillEllipse(Brushes.MediumVioletRed, j * dw, i * dh, dw, dh);
-                            //handler.grp.DrawEllipse(Pens.Black, j * dw, i * dh, dw, dh);
-                            break;
 
                     }
                 }
                 foreach(Monster m in monsters)
                 {
-                    m.Draw(handler);
+                    m.DrawImage(handler);
                 }
             }
+            player.DrawImage(handler);
         }
         
     }

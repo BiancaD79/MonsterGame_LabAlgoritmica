@@ -38,5 +38,6 @@ namespace Monster_Game
         {
             this.display.Image = bmp;
         }
+
     }
 }

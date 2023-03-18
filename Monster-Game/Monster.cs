@@ -14,12 +14,14 @@ namespace Monster_Game
     {
         public int locX, locY;
         public int dX, dY;
+        public string imgFile;
         static Random rnd = new Random();
         public MonsterType type;
-        public Monster(int locX,int locY,int type)
+        public Monster(int locX,int locY,int type,string img)
         {
             this.locX = locX;
             this.locY = locY;
+            this.imgFile = img;
             int t;
             switch (type)
             {
@@ -80,7 +82,7 @@ namespace Monster_Game
                         { dY = x; dX = 0; }
                         break;
                 }
-               
+                
             }
             else
             {
@@ -110,6 +112,12 @@ namespace Monster_Game
 
             handler.grp.FillEllipse(new SolidBrush(fillColor), locY * Engine.dw, locX * Engine.dh, Engine.dw, Engine.dh);
             handler.grp.DrawEllipse(new Pen(drawColor), locY * Engine.dw, locX * Engine.dh, Engine.dw, Engine.dh);
+        }
+
+        public void DrawImage(myGraphics handler)
+        {
+            Image image = Image.FromFile(imgFile);
+            handler.grp.DrawImage(image, locY * Engine.dw, locX * Engine.dh, Engine.dw, Engine.dh);
         }
     }
 }

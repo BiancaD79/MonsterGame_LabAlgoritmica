@@ -10,15 +10,6 @@ namespace Monster_Game
         private void Form1_Load(object sender, EventArgs e)
         {
             T.InitGraph(pictureBox1);
-            Engine.Load(@"..\..\..\Maps.txt");
-            Engine.DoMath(T);
-            Engine.Draw(T);
-            //for (int i = 0; i < Engine.gMatrix.GetLength(0); i++)
-              //  for (int j = 0; j < Engine.gMatrix.GetLength(1); j++)
-                //{
-                    
-                //}
-            
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -32,7 +23,38 @@ namespace Monster_Game
         private void button1_Click(object sender, EventArgs e)
         {
             timer1.Start();
-            button1.Dispose();
+            Engine.Load(@"..\..\..\Maps.txt");
+            Engine.DoMath(T);
+            Engine.Draw(T);
+            button2.Hide();
+            button1.Hide();
+            menubtn.Show();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            Engine.MovePlayer(e);
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            Engine.StopPlayer(e);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ChooseLevel f = new ChooseLevel();
+            f.ShowDialog();
+        }
+
+        private void menubtn_Click(object sender, EventArgs e)
+        {
+            T.ClearGraph();
+            menubtn.Hide();
+            button1.Show();
+            button2.Show();
+            Engine.Stop();
+            timer1.Stop();
         }
     }
 }
