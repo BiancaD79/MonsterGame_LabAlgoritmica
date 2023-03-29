@@ -11,9 +11,12 @@ namespace Monster_Game
     {
         public static int[,] gMatrix;
         static List<Monster> monsters = new List<Monster>();
+        public static Player player;
+        public static Point final;
+        public static string crtLevel;
         public static void Load(string fileName)
         {
-            TextReader load = new StreamReader(fileName);
+            TextReader load = new StreamReader(@"..\..\..\Maps\" + fileName);
             List<string> data = new List<string>();
             string buffer;
             while((buffer = load.ReadLine()) != null)
@@ -28,10 +31,15 @@ namespace Monster_Game
                 for (int j = 0; j < local.Length; j++)
                 {
                     gMatrix[i,j] = int.Parse(local[j]);
-                    if(gMatrix[i,j] == 5 || gMatrix[i, j] == 6 || gMatrix[i, j] == 7)
+                    if (gMatrix[i, j] == 5 || gMatrix[i, j] == 6 || gMatrix[i, j] == 7)
                     {
                         monsters.Add(new Monster(i, j, gMatrix[i, j]));
                     }
+                    else
+                        if (gMatrix[i, j] == 2)
+                        player = new Player(i, j);
+                    else
+                        if (gMatrix[i, j] == 3) final = new Point(i,j);
                 }
             }
             
@@ -64,12 +72,14 @@ namespace Monster_Game
                             handler.grp.DrawRectangle(Pens.Black, j * dw, i * dh,dw,dh);
                             break;
                         case 2:
-                            //start
+                            player.Draw(handler);
                             break;
-                        case 3: // final
+                        case 3:
+                            handler.grp.FillRectangle(Brushes.Black, j * dw, i * dh, dw, dh);
+                            handler.grp.DrawRectangle(Pens.Black, j * dw, i * dh, dw, dh);
                             break;
                         case 9: //diamonds
-                            handler.grp.FillEllipse(Brushes.BlueViolet, j * dw, i * dh, dw, dh);
+                            handler.grp.FillEllipse(Brushes.DarkBlue, j * dw, i * dh, dw, dh);
                             handler.grp.DrawEllipse(Pens.Black, j * dw, i * dh, dw, dh);
                             break;
                         case 5: // orizontal
@@ -77,8 +87,6 @@ namespace Monster_Game
                         case 6: // vertical
                            
                         case 7: // toate dir
-                            //handler.grp.FillEllipse(Brushes.MediumVioletRed, j * dw, i * dh, dw, dh);
-                            //handler.grp.DrawEllipse(Pens.Black, j * dw, i * dh, dw, dh);
                             break;
 
                     }
@@ -87,9 +95,26 @@ namespace Monster_Game
                 {
                     m.Draw(handler);
                 }
+                player.Draw(handler);
             }
         }
-        
+
+        public static bool CanMove(int locX, int locY)
+        {
+            if (gMatrix[locY, locX] != 1)
+                return true;
+            return false;
+        }
+        public static bool IsMonster(int locX, int locY)
+        {
+            foreach(Monster monster in monsters)
+            {
+                if (monster.locX == locX && monster.locY == locY)
+                    return true;
+            }
+            return false;
+        }
+
     }
 
 }
